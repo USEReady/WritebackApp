@@ -1,0 +1,52 @@
+/*CSS Used In Extensions*/
+.cell {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 30px;
+    vertical-align: middle;
+    padding-left: 3px;
+}
+
+.header {
+    font-weight: bold;
+    border-bottom: 1px solid #888888;
+}
+
+.odd {
+    background: #EEEEEE;
+}
+
+.grid {
+    outline: none;
+}
+
+.interesting {
+    font-weight: 700;
+}
+
+.dataTable {
+    height: calc(100vh - 60px);
+}
+
+.link-button {
+    color: #1C8AFF;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.link-button:hover,
+.link-button:focus {
+    text-decoration: none;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: black;
+    opacity: 1; /* Firefox */
+  }
+  

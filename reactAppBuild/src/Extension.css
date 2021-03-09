@@ -1,0 +1,16 @@
+.container {
+    padding: 2%;
+    background-color: #f5f3f3;
+}
+.header {
+    background-color: white;
+    padding: 1%;
+}
+.content, .body {
+    background-color: white;
+}
+.body {
+    margin: 2% 0%;
+    padding: 1%;
+    height: 100px;
+}
