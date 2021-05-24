@@ -39,26 +39,26 @@ class TestInsertEndPoints extends React.Component {
     handleUpdateChange(e){
         this._textUp=e.target.value
     }
-    handleUserRole(e){
-        try{
-            let userobj={
-                username:'ashwin_editor'
-            }
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userobj)
-            };     
-            fetch(Config.rest_server_url+'getuserrole', requestOptions)
-                .then(response => {
-                console.log(response.json());
-            });
-        }
-        catch(err)
-        {
-            console.log(err)
-        }
-    }
+    // handleUserRole(e){
+    //     try{
+    //         let userobj={
+    //             username:'ashwin_editor'
+    //         }
+    //         const requestOptions = {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(userobj)
+    //         };     
+    //         fetch(Config.rest_server_url+'getuserrole', requestOptions)
+    //             .then(response => {
+    //             console.log(response.json());
+    //         });
+    //     }
+    //     catch(err)
+    //     {
+    //         console.log(err)
+    //     }
+    // }
     handleInputChange(e){
         this._textInp=e.target.value
     }

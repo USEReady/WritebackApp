@@ -12,7 +12,7 @@ function Extension(props){
     const [headers, setHeaders] = useState([]);
     const [userRole, setRole] = React.useState('');
     const [userName, setUsername] = React.useState('');
-    console.log(props.role)
+    // console.log(props.role)
     let unregisterEventFn = undefined;
     let unregisterEventFnFilter = undefined;
 
@@ -21,9 +21,9 @@ function Extension(props){
             const sheetNames = tableau.extensions.dashboardContent.dashboard.worksheets.map(worksheet => worksheet.name);
             setSheetNames(sheetNames);
 
-            const selectedSheet =  getSelectedSheet(Config.sheet1);
+            const selectedSheet =  getSelectedSheet();
             setSelectedSheet(selectedSheet);
-            console.log('selectedSheet',selectedSheet)           
+            console.log('selectedSheet==>',selectedSheet)           
             
             const sheetSelected = !!selectedSheet;
             // setIsLoading(sheetSelected);
@@ -37,7 +37,7 @@ function Extension(props){
 
     const getSelectedSheet = (sheet) => {
         const sheetName = sheet || selectedSheet;
-        return tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.sheet1);
+        return tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.SheetName[Config.SheetName.indexOf(worksheet.name)]);
     };
     const loadSelectedMarks = (sheet) => {
         if(unregisterEventFn){
@@ -52,9 +52,9 @@ function Extension(props){
         // setHeaders(field);
         worksheet.getSummaryDataAsync().then(info => {
             const username = info.data[0][1].value;
-            // console.log(username)
+             console.log("extensionusername=>",username)
             setUsername(username)
-            setRole(fetchUserRole(username))
+           // setRole(fetchUserRole(username))
             });
         worksheet.getSelectedMarksAsync().then(marks => {
             const worksheetData = marks.data[0];
@@ -88,7 +88,7 @@ function Extension(props){
 /*This is part where extensions created*/
     const mainContent = (rows.length > 0)
         ? (<DataTable username={userName} role={userRole} rows={rows} headers={headers} selectedSheet={selectedSheet}/>)
-        : (<h4>Please click on the table above to update adjusted forecast.</h4>);
+        : (<h4>Please click on the table to update the value.</h4>);
 
 let output = <div>{mainContent}</div>;
     return (

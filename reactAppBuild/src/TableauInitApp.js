@@ -17,12 +17,15 @@ class TableauInitApp extends Component {
         console.log("under comp did mount")
         if(this.state.username === ''){
             tableau.extensions.initializeAsync().then(() => {
-                const sheet = tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.sheet1);
+                console.log("iniit",tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name))
+                const sheet = tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.SheetName[Config.SheetName.indexOf(worksheet.name)]);
                 console.log(sheet)
                 sheet.getSummaryDataAsync().then(info => {
+                    console.log("info",info.data)
+                    console.log("infouser",info.data[0][1])
                 const username = info.data[0][1].value;
-                console.log(username)
-                this.setUserRole(username,fetchUserRole(username))
+                console.log("tableauappinitusername",username)
+               // this.setUserRole(username,fetchUserRole(username))
                 });
             });
         }

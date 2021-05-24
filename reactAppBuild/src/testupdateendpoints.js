@@ -35,11 +35,11 @@ class TestUpdateEndPoints extends React.Component {
         console.log("under comp did mount")
         if(this.state.username === ''){
             tableau.extensions.initializeAsync().then(() => {
-                const sheet = tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.sheet1);
+                const sheet = tableau.extensions.dashboardContent.dashboard.worksheets.find(worksheet => worksheet.name === Config.SheetName[Config.SheetName.indexOf(worksheet.name)]);
                 console.log(sheet)
                 sheet.getSummaryDataAsync().then(info => {
                 const username = info.data[0][1].value;
-                console.log(username)
+                console.log("testupdateusername",username)
                 this.setState({'username':username})
                 });
             });

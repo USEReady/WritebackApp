@@ -57,7 +57,7 @@ const useStyles = makeStyles({
         fontSize: 11,
         fontFamily: "Trebuchet MS",
         fontWeight: 600,
-        width: "111px",
+        width: "110px",
     },
     
 
@@ -74,6 +74,7 @@ const useStyles = makeStyles({
 
 /*This is the functional component */
 let prevvalue = '';
+let currentkey = '';
 function DataTable(props) {
     const [editAdjustedForecast, setAdjustedForecast] = React.useState({});
     const [field, setField] = React.useState({});
@@ -83,11 +84,10 @@ function DataTable(props) {
     const [message, setMessage] = React.useState('');
     let writebackDataCopy = [];
     let writebackAuditCopy = [];
-    let comment = [];
     const [username, setUsername] = React.useState();
     const [errorMsg, setErrormsg] = React.useState('Something Went Wrong!');
     const [inputvalue, setinputvalue] = React.useState('');
-    const [textareavalue, settextareavalue] = React.useState('');
+
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -137,7 +137,7 @@ function DataTable(props) {
         else {
           if(response.statusText == "") {
             setErrorOpen(true);
-            setErrormsg('Error while saving, contact your write-back admin');
+            setErrormsg('Error While Saving');
             if(index == 1){
              setErrormsg('Error in Audit Table')  
             }
@@ -172,12 +172,20 @@ function DataTable(props) {
 /* This is the function that will get Tableau Data*/
     const getTableContent = headers => {
       console.log("rows",props.rows)
+      if(currentkey != props.rows[0][0] && props.rows.length > 0 && headers.length > 0){
+      
         let content = [];
         let column_name = '';
         let headersName = '';
-        console.log("headers",headers);
        
+        console.log("headers",headers);
+         
+        
+           currentkey =  props.rows[0][0];
+           console.log("key==>",currentkey);
           for( let j =0;j< props.rows.length;j++) {
+            console.log("inside for j");
+            debugger;
               let writebackData = new Object();
               let writeBackAuditdata = new Object();
                 for(let i=0;i<headers.length;i++) {
@@ -186,19 +194,13 @@ function DataTable(props) {
                       if(keys == "Measure Names") {
                         const measureKeyvalue = values.split('].[').join(',').split(':');
                           writebackData['Measure Names'] = measureKeyvalue[1];
-                          console.log("WB_source_value Calculations ==>", measureKeyvalue[1]);
                            if(props.rows[j][headers.indexOf("WB_SourceValue")] == measureKeyvalue[1]) {
-                            
                             column_name = 'WBValue';
-                          }
-                          else {
-                            column_name = '';
                           }
                       }
                       else if( keys == "Measure Values") {
                         writebackData['WBValue'] = values.toString();
                         writeBackAuditdata['WB_Value'] = values.toString();
-                        writebackData['WB_comment'] = "";
                       }
                       else if (keys =="WB_PrimaryKey") {
                         writebackData['WBPrimaryKey'] = values;
@@ -235,26 +237,23 @@ function DataTable(props) {
                       }
                     }
                       if(keys == 'Measure Values') {
-                        if( prevvalue != values && props.rows.length - j == 1){
-                          setinputvalue(Math.random())
+                        //setinputvalue(values);
+                        console.log("values==>",values)
+                        console.log("prevvlaue==>",prevvalue)
+                        if(prevvalue != values){
+                          console.log("if")
+                          setinputvalue(values)
                           prevvalue = values;
                         }
                         console.log("values==>", values)
                         if(props.rows[j][headers.indexOf("Role")].includes('Interactor') &&  column_name == "WBValue") {   // 
-                         
                           content.push(
-                            <div>
+                            <React.Fragment>
                                   <div className={classes.row}>
-                                   <label className={classes.label} >WBValue</label>   {/*defaultValue={inputvalue || ''}   key={Math.random()} onBlur={setonblur} }*/}  
-                                  <input type="number" step="0.01" className={classes.input} key={inputvalue}   defaultValue={values.toFixed(Config.WB_Decimal)} name={keys} headerRow={headersName} onChange={handleInputChange}></input>
-                                  
-                                  {/* <input type="number" step="0.01" className={classes.input}   placeholder={values.toFixed(Config.WB_Decimal)} name={keys} headerRow={headersName} onChange={handleInputChange}></input> */}
+                                   <label className={classes.label} >WBValue</label>   {/* placeholder={values.toFixed(Config.WB_Decimal)}  key={Math.random()} onBlur={setonblur}*/}  
+                                  <input type="number" step="0.01" className={classes.input} key={Math.random()} defaultValue={inputvalue}  name={keys} headerRow={headersName} onChange={handleInputChange}></input>
                                   </div>
-                                  <div className={classes.row}>
-                                    <label className={classes.label}>Comments</label>
-                                    <textarea style={{width:'111px',height:'26px'}} defaultValue="" key={inputvalue}  headerRow={headersName} name={keys} onChange={handletextareachange}></textarea>
-                                  </div>
-                          </div>
+                          </React.Fragment>
                           );
                           if(props.rows.length - j == 1){
                             content.push(<div className={classes.row + ' ' + classes.savebtndiv}>
@@ -282,43 +281,38 @@ function DataTable(props) {
               writebackDataCopy = [...writebackDataCopy,writebackData];
               writebackAuditCopy = [...writebackAuditCopy,writeBackAuditdata];
            }
+         
            console.log("writebackdata==>",writebackDataCopy);
            console.log("writebAudit==>",writebackAuditCopy)
           
         return content;
+      }
       };
 
-     
+      const setonblur = event => {
+        const getval = event.target.value;
+        console.log("onblurval==>", getval)
+      }
+/* This is the function that uses for Input type operation*/
     const handleInputChange = event => {
-      const target = event.target;
-      const value = target.value;
-      const keyName = target.name;
-      const rowHeader = event.currentTarget.attributes['headerRow'].value;
-     // setinputvalue(value)
-     // writebackData[keyName] = value;
-     console.log("rowheader",rowHeader);
-     for(let i=0; i<writebackDataCopy.length;i++){
-       console.log("wb==>", writebackDataCopy[i]['WBValue'])
-       if(writebackDataCopy[i]['WBPrimaryKey'] == rowHeader){
-        writebackDataCopy[i]['WBValue'] = value;
-        writebackAuditCopy[i]['WB_Value'] = value;
-      }
-    
-     }
-      
-  }
-
-  const handletextareachange = event => {
-    const target = event.target;
-    const value = target.value;
-    const rowHeader = event.currentTarget.attributes['headerRow'].value;
-      for(let i=0; i<writebackDataCopy.length;i++) {
-        if(writebackDataCopy[i]['WBPrimaryKey'] == rowHeader){
-          writebackDataCopy[i]['WB_comment'] = value;
-          }
-      }
+        const target = event.target;
+        const value = target.value;
+        const keyName = target.name;
+        const rowHeader = event.currentTarget.attributes['headerRow'].value;
      
-  }
+       // writebackData[keyName] = value;
+       console.log("rowheader",rowHeader);
+       for(let i=0; i<writebackDataCopy.length;i++){
+         console.log("wb==>", writebackDataCopy[i]['WBValue'])
+         if(writebackDataCopy[i]['WBPrimaryKey'] == rowHeader){
+          writebackDataCopy[i]['WBValue'] = value;
+          writebackAuditCopy[i]['WB_Value'] = value;
+          setinputvalue(value)
+        }
+      
+       }
+        
+    }
     function Alert(props) {
       return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
@@ -327,9 +321,9 @@ function DataTable(props) {
         <div className={classes.container}>
           {/* <SelectGroup></SelectGroup> */}
         <div>
+          
             {getTableContent(props.headers)}
         </div>
-        
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} >
         <Alert onClose={handleClose} >
         Saved Successfully !!
