@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "npm run server",
-    "build": "copyfiles -f lib/tableau.extensions.1.latest.min.js ./public && react-scripts build",
+    "build": "react-scripts build && copyfiles webextn.trex ./public && copyfiles -f lib/tableau.extensions.1.latest.min.js ./public",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server.js"

@@ -1,3 +1,4 @@
+const {Config} = require('../reactAppBuild/src/Config.js');
 const express = require('express');
 var https = require('https');
 var http = require('http');
@@ -7,7 +8,7 @@ const app = express();
 const cors = require('cors');
 
 const ca = [];
-let chain = fs.readFileSync("public/ssl/ca.crt",'utf-8');
+let chain = fs.readFileSync(Config.API_CA_T,'utf-8');
 chain = chain.split("\n");
 let cert = [];
 for (let line of Array.from(chain)) {
@@ -20,13 +21,13 @@ for (let line of Array.from(chain)) {
   }
 }
 
-const port = 3000
+//const port = 3000
 const httpsPort = 8443
 // This line is from the Node.js HTTPS documentation.
 var options = {
   ca: ca,
-  key: fs.readFileSync('public/ssl/local.key'),
-  cert: fs.readFileSync('public/ssl/local.crt'),
+  key: fs.readFileSync(Config.API_KEY),
+  cert: fs.readFileSync(Config.API_CRT),
   rejectUnauthorized: false,
   requestCert: false
 };
@@ -49,6 +50,6 @@ app.get('/', function (req, res) {
 
 //app.listen(port, () => console.log(`BACK_END_SERVICE_PORT: ${port}`));
 // Create an HTTP service.
-http.createServer(app).listen(port,() => console.log(`Http app service started on port: ${port}`));
+//http.createServer(app).listen(port,() => console.log(`Http app service started on port: ${port}`));
 https.createServer(options, app).listen(httpsPort,() => console.log(`Https app service started on port: ${httpsPort}`));
 // app.listen(9000);
